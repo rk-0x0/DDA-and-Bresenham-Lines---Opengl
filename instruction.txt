@@ -1,0 +1,10 @@
+This program is loaded with some cool features such as mouse interactions & menu driven which makes it more interactive.
+
+Once you come over gui console , You can click as many points you want and then just right click to select algorithms 
+from menu.
+
+(for the first time you have to right click twice to attach right button) 
+
+you can also clear the window by selecting 'clear' option.
+
+Enjoy!!.
