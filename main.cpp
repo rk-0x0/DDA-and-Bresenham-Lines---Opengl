@@ -1,6 +1,7 @@
 #include<iostream>
 #include<GL/glut.h>
 #include<vector>
+#include<math.h>
 using namespace std;
 
 int width=700,height=600,f;
@@ -11,6 +12,16 @@ class Line
 public:
     int dx,dy;
     float xinc,yinc,x,y;
+
+    void draw_pixel(int x,int y)
+    {
+         glColor3f(1.0,0.0,0.0);
+         glBegin(GL_POINTS);
+                 glVertex2i(x,y);
+                 glEnd();
+                glFlush();
+
+    }
 
     void DDA()
     {
@@ -33,12 +44,7 @@ public:
             glColor3f(1.0,0.0,0.0);
             for(int j=0;j<=steps;j++)
             {
-
-                glBegin(GL_POINTS);
-                 glVertex2i(x,y);
-                 glEnd();
-                glFlush();
-
+                draw_pixel( round(x), round(y));
                 x=x+xinc;
                 y=y+yinc;
             }
@@ -47,6 +53,76 @@ public:
 
     void Bresenham()
     {
+
+      for(unsigned int i=0;i<points.size()-1;i++)
+      {
+        int dp,xend,yend,x1,x2,y1,y2;
+
+        x1=points[i].first;
+        y1=points[i].second;
+        x2=points[i+1].first;
+        y2=points[i+1].second;
+
+     	 dy = ( y2 -  y1);
+	     dx = ( x2 -  x1);
+	    int m =  dy* dx;
+
+     	if(abs( dy) < abs( dx))
+        {
+		if( x1 >  x2)
+		{
+			x = x2;
+			y = y2;
+			xend = x1;
+			xend = x1;
+		}
+		else{
+			x = x1;
+			y = y1;
+			xend = x2;
+		}
+		 dy = abs( dy);
+		 dx = abs( dx);
+		 dp = (2 *  dy) -  dx;
+		draw_pixel( x, y);
+		while(x < xend){
+			++x;
+			if(dp < 0)
+				dp = dp + (2*dy);
+			else{
+				y = (m>=0)?(y+1):(y-1);
+				dp += 2*(dy - dx);
+			}
+			 draw_pixel( x, y);
+		}
+	}
+	else{
+		 dy = abs( dy);
+		 dx = abs( dx);
+		 dp = (2 *  dx) -  dy;
+		if( y1 >  y2){
+			x = x2;
+			y = y2;
+			yend = y1;
+		}
+		else{
+			x = x1;
+			y = y1;
+			yend = y2;
+		}
+		 draw_pixel( x, y);
+		while(y < yend){
+			++y;
+			if(dp < 0)
+				dp += (2*dx);
+			else{
+				x = (m>=0)?(x+1):(x-1);
+				dp += 2*(dx - dy);
+			}
+			 draw_pixel( x, y);
+		}
+        }
+      }
 
     }
 
@@ -69,7 +145,7 @@ void menu(int p)
         break;
     case 2:
         if(f>1)
-        l.Bresenham()
+        l.Bresenham();
         break;
     case 3:
         glClearColor(0.0,0.0,0.0,0.0);
